@@ -80,7 +80,7 @@ async def new_project(db, schema_table, schema_row):
         FROM INFORMATION_SCHEMA.COLUMNS
         WHERE TABLE_NAME = $1
         ''', schema_table)
-        print([val for key, val in columns])
+        print([val for val in columns])
 
     with open(os.path.join(os.getcwd(), 'migrations', 'config.json'), 'w') as mig_config_file:
         mig_config = {'dsn': os.environ.get(db), 'schemaTable': schema_table,
