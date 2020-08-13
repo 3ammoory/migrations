@@ -69,7 +69,7 @@ async def new_project(db, schema_table, schema_row):
     CREATE TABLE {schema_table} (
         {schema_row} VARCHAR(32) NOT NULL UNIQUE,
         created DATE NOT NULL DEFAULT NOW(),
-        version UUID,
+        version UUID
     )
     ''')
 
