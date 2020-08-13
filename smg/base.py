@@ -78,11 +78,11 @@ async def new_project(db, schema_table, schema_row):
         columns = await con.fetchrow(f'''
         SELECT column_name
         FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE TABLE_NAME = '{schema_table}';
-        ''')
+        WHERE TABLE_NAME = $1
+        ''', schema_table)
         print(schema_table)
 
-    with open(os.path.join(os.getcwd(), 'migrations', 'config.json'), 'wb') as mig_config_file:
+    with open(os.path.join(os.getcwd(), 'migrations', 'config.json'), 'w') as mig_config_file:
         mig_config = {'dsn': os.environ.get(db), 'schemaTable': schema_table,
                       'schemaRow': schema_row, 'migrations': {'public': [], 'tenant': []}, 'current_public': None, 'current_tenant': None}
         mig_config_file.write(json.dumps(mig_config))
