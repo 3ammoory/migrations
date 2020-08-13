@@ -10,7 +10,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     entry_points={
         "console_scripts": ["smg = smg.smg:app"]
-    }
+    },
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
