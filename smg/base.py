@@ -75,7 +75,7 @@ async def new_project(db, schema_table, schema_row):
     )
     ''')
     except DuplicateTableError as e:
-        columns = await con.fetch(f'''
+        columns = await con.fetchrow(f'''
         SELECT column_name
         FROM INFORMATION_SCHEMA.COLUMNS
         WHERE TABLE_NAME = '{schema_table}';
