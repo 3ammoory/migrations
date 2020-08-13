@@ -68,7 +68,7 @@ async def new_project(db, schema_table, schema_row):
     await con.execute(f'''
     CREATE TABLE {schema_table} (
         {schema_row} VARCHAR(32) NOT NULL UNIQUE,
-        created NOT NULL DEFAULT NOW(),
+        created DATE NOT NULL DEFAULT NOW(),
         version UUID,
     )
     ''')
