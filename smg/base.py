@@ -206,7 +206,7 @@ async def upgrade(public, to: int = None):
                 if public:
                     await con.execute(upgrade)
                 else:
-                    schemas = await con.fetch(f'SELECT {config['schemaRow']}, version FROM {config['schemaTable']}')
+                    schemas = await con.fetch(f'SELECT {config["schemaRow"]}, version FROM {config["schemaTable"]}')
                     async with con.transaction() as t:
                         for schema, version in schemas:
 
