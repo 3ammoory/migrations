@@ -79,6 +79,7 @@ async def new_project(db, schema_table, schema_row):
         SELECT column_name
         FROM INFORMATION_SCHEMA.COLUMNS
         WHERE TABLE_NAME = $1
+        AND TABLE_SCHEMA = 'public'
         ''', schema_table)
         print([val for val in columns])
 
