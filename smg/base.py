@@ -5,6 +5,7 @@ import re
 import sqlparse
 import asyncpg
 import typer
+from asyncpg.exceptions import DuplicateTableError
 
 
 migrations_dir = os.path.join(os.getcwd(), 'migrations')
@@ -65,13 +66,21 @@ async def new_project(db, schema_table, schema_row):
         print('Directory "sql" already exists. Will proceed through')
 
     con: asyncpg.Connection = await asyncpg.connect(db)
-    await con.execute(f'''
-    CREATE TABLE {schema_table} (
+    try:
+        await con.execute(f'''
+        CREATE TABLE {schema_table} (
         {schema_row} VARCHAR(32) NOT NULL UNIQUE,
         created DATE NOT NULL DEFAULT NOW(),
         version UUID
     )
     ''')
+    except DuplicateTableError as e:
+        columns = await con.fetchrow('''
+        select *
+        from INFORMATION_SCHEMA.COLUMNS
+        where TABLE_NAME=$1
+        ''', schema_table)
+        print(schema_table)
 
     with open(os.path.join(os.getcwd(), 'migrations', 'config.json'), 'wb') as mig_config_file:
         mig_config = {'dsn': os.environ.get(db), 'schemaTable': schema_table,
