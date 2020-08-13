@@ -79,7 +79,7 @@ async def new_project(db, schema_table, schema_row):
         SELECT column_name
         FROM INFORMATION_SCHEMA.COLUMNS
         WHERE TABLE_NAME = '{schema_table}';
-        ''', schema_table)
+        ''')
         print(schema_table)
 
     with open(os.path.join(os.getcwd(), 'migrations', 'config.json'), 'wb') as mig_config_file:
