@@ -7,6 +7,12 @@ setuptools.setup(
     author_email="omarabobakr2973@gmail.com",
     description="A migrations tool for postgresql databases with multiple schemas",
     url="https://github.com/3ammoory/migrations",
+    install_requires=[
+        'typer',
+        'asyncpg',
+        'python-dotenv',
+        'sqlparse'
+    ]
     packages=setuptools.find_packages(),
     entry_points={
         "console_scripts": ["smg = smg.smg:app"]
