@@ -81,7 +81,7 @@ async def new_project(db, schema_table, schema_row):
         WHERE TABLE_NAME = $1
         AND TABLE_SCHEMA = 'public'
         ''', schema_table)
-        print([*val.values() for val in columns])
+        print([val.values()[0] for val in columns])
 
     with open(os.path.join(os.getcwd(), 'migrations', 'config.json'), 'w') as mig_config_file:
         mig_config = {'dsn': os.environ.get(db), 'schemaTable': schema_table,
