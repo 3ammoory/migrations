@@ -75,13 +75,22 @@ async def new_project(db, schema_table, schema_row):
     )
     ''')
     except DuplicateTableError as e:
-        columns = await con.fetch(f'''
+        column_records = await con.fetch('''
         SELECT column_name
         FROM INFORMATION_SCHEMA.COLUMNS
         WHERE TABLE_NAME = $1
         AND TABLE_SCHEMA = 'public'
         ''', schema_table)
-        print([val for record in columns for val in record])
+        columns = [val for record in column_records for val in record]
+        if schema_row in columns:
+            current_row_type = await con.fetchval('''
+            SELECT DATA_TYPE
+            FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_NAME = $1
+            AND TABLE_SCHEMA = 'public'
+            AND COLUMN_NAME = $2
+            ''', schema_table, schema_row)
+            print(current_row_type)
 
     with open(os.path.join(os.getcwd(), 'migrations', 'config.json'), 'w') as mig_config_file:
         mig_config = {'dsn': os.environ.get(db), 'schemaTable': schema_table,
