@@ -12,7 +12,7 @@ setuptools.setup(
         'asyncpg',
         'python-dotenv',
         'sqlparse'
-    ]
+    ],
     packages=setuptools.find_packages(),
     entry_points={
         "console_scripts": ["smg = smg.smg:app"]
