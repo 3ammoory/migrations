@@ -23,5 +23,5 @@ def read_config(env_path: str = None):
 @coro
 async def init(dsn: str = os.getenv('DB_URL'), schemaTable: str = os.getenv('SCHEMA_TABLE'), schemaRow: str = os.getenv('SCHEMA_ROW')):
     possible_vals = [(name, val)
-                     for name, val in os.environ if name.lower().startswith('s')]
+                     for name, val in os.environ.items() if name.lower().startswith('s')]
     await new_project(dsn, schemaTable, schemaRow)
