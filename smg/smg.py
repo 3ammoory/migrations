@@ -3,6 +3,7 @@ import typer
 from dotenv import load_dotenv
 from .base import new_project
 from .utils import coro
+import os
 
 app = typer.Typer()
 
@@ -12,9 +13,7 @@ def read_config(env_path: str = None):
     if env_path:
         load_dotenv(env_path)
     else:
-        load_dotenv()
-    global os
-    import os
+        load_dotenv('config.env')
     global env
     env = os.environ
 
