@@ -12,7 +12,7 @@ def read_config(env_path: str = None):
     if env_path:
         load_dotenv(env_path)
     else:
-        load_dotenv()
+        load_dotenv(os.path.join(os.getcwd(), 'config.env'))
 
 
 @app.command()
