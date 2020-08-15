@@ -1,12 +1,15 @@
+import os
 import typer
 from dotenv import load_dotenv
 from .base import new_project
 from .utils import coro
 
+load_dotenv()
+
+env = os.environ
 app = typer.Typer()
-env = None
 
-
+'''
 @app.callback()
 def read_config(env_path: str = None):
     if env_path:
@@ -15,6 +18,7 @@ def read_config(env_path: str = None):
         load_dotenv(os.path.join(os.getcwd(), 'config.env'))
     import os
     env = os.environ
+'''
 
 
 @app.command()
