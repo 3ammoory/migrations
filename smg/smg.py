@@ -22,4 +22,5 @@ def read_config(env_path: str = None):
 @app.command()
 @coro
 async def init(dsn: str = os.getenv('DB_URL'), schemaTable: str = os.getenv('SCHEMA_TABLE'), schemaRow: str = os.getenv('SCHEMA_ROW')):
+    print(os.environ)
     await new_project(dsn, schemaTable, schemaRow)
