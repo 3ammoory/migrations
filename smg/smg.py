@@ -13,6 +13,7 @@ def read_config(env_path: str = None):
         load_dotenv(env_path)
     else:
         load_dotenv(os.path.join(os.getcwd(), 'config.env'))
+    global os
     import os
     global env
     env = os.environ
