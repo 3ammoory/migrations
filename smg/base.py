@@ -93,7 +93,7 @@ async def new_project(db, schema_table, schema_row):
             print(current_row_type)
 
     with open(os.path.join(os.getcwd(), 'migrations', 'config.json'), 'w') as mig_config_file:
-        mig_config = {'dsn': os.environ.get(db), 'schemaTable': schema_table,
+        mig_config = {'dsn': db, 'schemaTable': schema_table,
                       'schemaRow': schema_row, 'migrations': {'public': [], 'tenant': []}, 'current_public': None, 'current_tenant': None}
         mig_config_file.write(json.dumps(mig_config))
 
