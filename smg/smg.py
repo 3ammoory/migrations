@@ -24,5 +24,5 @@ def read_config(env_path: str = None):
 @app.command()
 @coro
 async def init(dsn: str = config.get('DB_URL'), schemaTable: str = config.get('SCHEMA_TABLE'), schemaRow: str = config.get('SCHEMA_ROW')):
-    print(config['DB_URL'])
+    print(config)
     await new_project(dsn, schemaTable, schemaRow)
