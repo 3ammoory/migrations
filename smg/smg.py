@@ -6,6 +6,7 @@ from .utils import coro
 import os
 
 app = typer.Typer()
+env = None
 
 
 @app.callback()
