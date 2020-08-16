@@ -10,6 +10,7 @@ app = typer.Typer()
 
 @app.callback()
 def read_config(env_path: str = None):
+    print(os.getcwd())
     if env_path:
         load_dotenv(env_path)
     else:
