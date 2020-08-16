@@ -24,7 +24,5 @@ def read_config(env_path: str = None):
 @app.command()
 @coro
 async def init(dsn: str = config.get('DB_URL'), schemaTable: str = config.get('SCHEMA_TABLE'), schemaRow: str = config.get('SCHEMA_ROW')):
-    possible_vals = [(name, val)
-                     for name, val in os.environ.items() if name.lower().startswith('s')]
-    print(possible_vals)
+    print(config['DB_URL'])
     await new_project(dsn, schemaTable, schemaRow)
