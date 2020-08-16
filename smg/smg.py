@@ -10,7 +10,6 @@ app = typer.Typer()
 
 @app.callback()
 def read_config(env_path: str = None):
-    print(os.getcwd())
     if env_path:
         load_dotenv(env_path)
     else:
@@ -21,7 +20,7 @@ def read_config(env_path: str = None):
 
 @app.command()
 @coro
-async def init(dsn: str = os.getenv('DB_URL'), schemaTable: str = os.getenv('SCHEMA_TABLE'), schemaRow: str = os.getenv('SCHEMA_ROW')):
+async def init(dsn: str = env.get('DB_URL'), schemaTable: str = env.get('SCHEMA_TABLE'), schemaRow: str = env.get('SCHEMA_ROW')):
     possible_vals = [(name, val)
                      for name, val in os.environ.items() if name.lower().startswith('s')]
     print(possible_vals)
