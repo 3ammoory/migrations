@@ -4,11 +4,12 @@ from dotenv import load_dotenv
 from .base import new_project
 from .utils import coro
 import os
+from decouple import config
 
 app = typer.Typer()
 env = None
 
-
+'''
 @app.callback()
 def read_config(env_path: str = None):
     if env_path:
@@ -17,11 +18,12 @@ def read_config(env_path: str = None):
         load_dotenv(os.path.join(os.getcwd(), 'config.env'))
     global env
     env = os.environ
+'''
 
 
 @app.command()
 @coro
-async def init(dsn: str = env.get('DB_URL'), schemaTable: str = env.get('SCHEMA_TABLE'), schemaRow: str = env.get('SCHEMA_ROW')):
+async def init(dsn: str = config('DB_URL'), schemaTable: str = config('SCHEMA_TABLE'), schemaRow: str = config('SCHEMA_ROW')):
     possible_vals = [(name, val)
                      for name, val in os.environ.items() if name.lower().startswith('s')]
     print(possible_vals)
