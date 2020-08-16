@@ -8,6 +8,8 @@ from decouple import config
 
 app = typer.Typer()
 
+config = {}
+
 
 @app.callback()
 def read_config(env_path: str = None):
@@ -15,12 +17,13 @@ def read_config(env_path: str = None):
         load_dotenv(env_path)
     else:
         load_dotenv(os.path.join(os.getcwd(), 'config.env'))
-    setattr(app, 'env', os.environ)
+
+    config = dict(os.environ)
 
 
 @app.command()
 @coro
-async def init(dsn: str = app.env.get('DB_URL'), schemaTable: str = app.env.get('SCHEMA_TABLE'), schemaRow: str = app.env.get('SCHEMA_ROW')):
+async def init(dsn: str = config.get('DB_URL'), schemaTable: str = config.get('SCHEMA_TABLE'), schemaRow: str = config.get('SCHEMA_ROW')):
     possible_vals = [(name, val)
                      for name, val in os.environ.items() if name.lower().startswith('s')]
     print(possible_vals)
