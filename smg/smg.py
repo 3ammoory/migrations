@@ -8,7 +8,7 @@ app = typer.Typer()
 config_path = ''
 
 
-@app.callback():
+@app.callback()
 def set_config_path(path: str = None):
     config_path = path
 
