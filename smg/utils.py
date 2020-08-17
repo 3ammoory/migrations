@@ -22,9 +22,6 @@ def getval(obj, key):
 
 
 def getenv(key, config_path=None):
-    if not config_path:
-        load_dotenv('config.env')
-        return getval(os.environ, key)
-    else:
-        load_dotenv(config_path)
-        return getval(os.environ, key)
+    load_dotenv('config.env')
+    env = os.environ
+    return getval(env, key)
