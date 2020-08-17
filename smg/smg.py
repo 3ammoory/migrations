@@ -20,5 +20,5 @@ async def init(dsn: str = getenv('DB_URL'), schemaTable: str = getenv('SCHEMA_TA
 
 
 @app.command()
-def makemigrations(public: bool = False, sql_files: List[str] = typer.Argument([])):
+def makemigrations(public: bool = False, sql_files: List[str] = typer.Argument(False)):
     make_migrations(sql_files, public)
