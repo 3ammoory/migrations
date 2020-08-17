@@ -95,7 +95,7 @@ async def new_project(db, schema_table, schema_row):
             AND TABLE_SCHEMA = 'public'
             AND COLUMN_NAME = $2
             ''', schema_table, schema_row)
-            if current_row_type is not 'character varying':
+            if current_row_type != 'character varying':
                 overwrite = typer.confirm(
                     f'Column "{schema_row}" is of type {current_row_type}. Are you sure you want to change it to VARCHAR')
                 if not overwrite:
