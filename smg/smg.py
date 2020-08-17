@@ -1,8 +1,9 @@
 import os
 import typer
 from dotenv import load_dotenv
-from .base import new_project
+from .base import new_project, make_migrations
 from .utils import coro, getenv
+from typing import List
 
 app = typer.Typer()
 config_path = ''
@@ -15,5 +16,10 @@ def set_config_path(path: str = None):
 
 @ app.command()
 @ coro
-async def init(dsn: str = getenv('DB_URL'), schemaTable: str = getenv('SCHEMA_TABLE'), schemaRow: str = getenv('SCHEMA_ROW')):
+async def init(dsn: str = getenv('DB_URL', path), schemaTable: str = getenv('SCHEMA_TABLE', path), schemaRow: str = getenv('SCHEMA_ROW', path)):
     await new_project(dsn, schemaTable, schemaRow)
+
+
+@app.command()
+def makemigrations(sql_files: List[str] = typer.Argument(None), public: bool = False):
+    make_migrations(sql_files, public)
