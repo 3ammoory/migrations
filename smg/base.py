@@ -6,6 +6,7 @@ import sqlparse
 import asyncpg
 import typer
 from asyncpg.exceptions import DuplicateTableError
+import typer
 
 
 migrations_dir = os.path.join(os.getcwd(), 'migrations')
@@ -75,6 +76,8 @@ async def new_project(db, schema_table, schema_row):
     )
     ''')
     except DuplicateTableError as e:
+        typer.secho(
+            f'WARNING: Table {schema_table} already exists.Checking if column {schema_row} exists', fg='yellow')
         column_records = await con.fetch('''
         SELECT column_name
         FROM INFORMATION_SCHEMA.COLUMNS
@@ -83,6 +86,8 @@ async def new_project(db, schema_table, schema_row):
         ''', schema_table)
         columns = [val for record in column_records for val in record]
         if schema_row in columns:
+            typer.secho(
+                f'WARNING: column {schema_row} already exists. Checking its datatype', fg='yellow')
             current_row_type = await con.fetchval('''
             SELECT DATA_TYPE
             FROM INFORMATION_SCHEMA.COLUMNS
@@ -90,7 +95,25 @@ async def new_project(db, schema_table, schema_row):
             AND TABLE_SCHEMA = 'public'
             AND COLUMN_NAME = $2
             ''', schema_table, schema_row)
-            print(current_row_type)
+            if current_row_type is not 'character varying':
+                overwrite = typer.confirm(
+                    f'Column "{schema_row}" is of type {current_row_type}. Are you sure you want to change it to VARCHAR')
+                if not overwrite:
+                    typer.secho(
+                        'WARNING: schema column is not of type VARCHAR. This culd result in errors in the future.', fg='yellow')
+                else:
+                    await con.execute(f'''ALTER TABLE {schema_table}
+                                          ALTER COLUMN {schema_row} TYPE VARCHAR(32)''')
+            else:
+                typer.secho(
+                    f'column {schema_row} is of correct datatype. Skipping overwrite', fg='green')
+        else:
+            typer.secho(
+                f'WARNING: column {schema_row} was not found in existing table {schema_table}. Attempting to create it', fg='yellow')
+            await con.execute(f'''
+            ALTER TABLE {schema_table}
+            ADD COLUMN {schema_row} VARCHAR(32) UNIQUE
+            ''')
 
     with open(os.path.join(os.getcwd(), 'migrations', 'config.json'), 'w') as mig_config_file:
         mig_config = {'dsn': db, 'schemaTable': schema_table,
