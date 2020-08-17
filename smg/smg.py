@@ -5,6 +5,12 @@ from .base import new_project
 from .utils import coro, getenv
 
 app = typer.Typer()
+config_path = ''
+
+
+@app.callback():
+def set_config_path(path: str = None):
+    config_path = path
 
 
 @ app.command()
