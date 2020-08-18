@@ -55,19 +55,20 @@ class Migrator:
                 f'Directory "{name}" already exists. Will proceed through')
 
         try:
-            os.mkdir(os.path.join(os.getcwd(), name, 'versions'))
-            os.mkdir(os.path.join(os.getcwd(), name, 'versions', 'public'))
-            os.mkdir(os.path.join(os.getcwd(), name, 'versions', 'tenant'))
+            os.mkdir(Path(ROOT) / name / 'public')
+            os.mkdir(Path(ROOT) / name / 'public' / 'migrations')
+            os.mkdir(Path(ROOT) / name / 'public' / 'sql')
         except:
             typer.secho(
-                'Directory "versions" already exists. Will proceed through')
+                'Directory "public" already exists. Will proceed through')
 
         try:
-            os.mkdir(os.path.join(os.getcwd(), name, 'sql'))
-            os.mkdir(os.path.join(os.getcwd(), name, 'sql', 'public'))
-            os.mkdir(os.path.join(os.getcwd(), name, 'sql', 'tenant'))
+            os.mkdir(Path(ROOT) / name / 'tenant')
+            os.mkdir(Path(ROOT) / name / 'tenant' / 'migrations')
+            os.mkdir(Path(ROOT) / name / 'tenant' / 'sql')
         except:
-            typer.secho('Directory "sql" already exists. Will proceed through')
+            typer.secho(
+                'Directory "tenants" already exists. Will proceed through')
 
         con: asyncpg.Connection = await asyncpg.connect(db)
         try:
