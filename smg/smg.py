@@ -2,6 +2,7 @@ import os
 import typer
 from dotenv import load_dotenv
 from .base import new_project, make_migrations
+from .base2 import Migrator as mgr
 from .utils import coro, getenv, check_dir
 from typing import List
 
@@ -9,12 +10,13 @@ app = typer.Typer()
 
 
 @app.callback()
-def set_config_path():
+def callback(public: bool = False):
     '''
     A tool for handling migrations in
     PostgreSQL databases which contain multiple
     schemas
     '''
+    mgr.public = public
 
 
 @ app.command()
@@ -24,6 +26,6 @@ async def init(name: str, dsn: str = getenv('DB_URL'), schemaTable: str = getenv
 
 
 @app.command()
-def makemigrations(public: bool = False):
+def makemigrations():
     check_dir()
-    make_migrations(public)
+    mgr.make_migrations()
