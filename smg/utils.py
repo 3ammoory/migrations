@@ -31,7 +31,7 @@ def getenv(key, config_path=None):
 
 
 def is_projectdir():
-    return all(x in os.listdir() for x in ['config.json', 'sql', 'versions'])
+    return all(x in os.listdir() for x in ['config.json', 'public', 'tenant'])
 
 
 def check_dir():
