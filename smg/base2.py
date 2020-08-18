@@ -1,5 +1,6 @@
 import os
 import typer
+import asyncpg
 from .utils import check_dir, is_projectdir
 import json
 from pathlib import Path
