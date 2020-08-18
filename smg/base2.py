@@ -146,15 +146,18 @@ class Migrator:
     @classmethod
     def check_for_migrations(cls):
         schema = 'tenant'
+        sql_dir = TENANT_SQL
         sql_files = [Path(
             TENANT_SQL) / file for file in os.listdir(TENANT_SQL) if file.endswith('.sql')]
         existing_migration_sql = []
         if cls.public:
             schema = 'public'
+            sql_dir = PUBLIC_SQL
             sql_files = [Path(
                 PUBLIC_SQL) / file for file in os.listdir(PUBLIC_SQL) if file.endswith('.sql')]
-            mig_config = cls.read_file()
-            existing_migration_sql = [Path(project_dir) / schema / 'sql', / migration['sql'] for migration in mig_config['migrations'][schema]]
+        mig_config = cls.read_file()
+        existing_migration_sql = [Path(sql_dir) / migration['sql']
+                                  for migration in mig_config['migrations'][schema]]
         files_to_migrate_unprioritized = [
             file for file in sql_files if file not in existing_migration_sql]
         files_to_migrate_prioritized = []
