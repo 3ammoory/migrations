@@ -122,7 +122,7 @@ class Migrator:
                 ''')
         mig_config = {'dsn': db, 'schemaTable': schema_table,
                       'schemaRow': schema_row, 'migrations': {'public': [], 'tenant': []}, 'current_public': None, 'current_tenant': None}
-        cls.write_file(data=mig_config, file=Path(ROOT) / 'config.json')
+        cls.write_file(data=mig_config, file=Path(ROOT) / name / 'config.json')
 
     @classmethod
     def new_migration(cls, mig_data, sql_file):
