@@ -157,15 +157,12 @@ def check_for_migrations(public):
     return files_to_migrate_parsed
 
 
-def make_migrations(files=None, public=False):
+def make_migrations(public=False):
     schema = 'tenant'
     if public:
         schema = 'public'
     migration_files = []
-    if not files:
-        migration_files = check_for_migrations(public)
-    elif files:
-        migration_files = files
+    migration_files = check_for_migrations(public)
     for sql_file in migration_files:
         upgrade = None
         downgrade = None

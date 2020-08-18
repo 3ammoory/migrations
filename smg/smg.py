@@ -9,8 +9,12 @@ app = typer.Typer()
 
 
 @app.callback()
-def set_config_path(path: str = None):
-    config_path = path
+def set_config_path():
+    '''
+    A tool for handling migrations in
+    PostgreSQL databases which contain multiple
+    schemas
+    '''
 
 
 @ app.command()
@@ -20,5 +24,5 @@ async def init(dsn: str = getenv('DB_URL'), schemaTable: str = getenv('SCHEMA_TA
 
 
 @app.command()
-def makemigrations(public: bool = False, sql_files: List[str] = typer.Argument(False)):
-    make_migrations(sql_files, public)
+def makemigrations(public: bool = False):
+    make_migrations(public)
