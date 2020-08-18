@@ -15,7 +15,6 @@ def set_config_path():
     PostgreSQL databases which contain multiple
     schemas
     '''
-    if
 
 
 @ app.command()
