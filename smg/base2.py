@@ -41,7 +41,7 @@ class Migrator:
         if not content:
             raise EmptyContentError
         with open(file, 'w') as _file:
-            _file.write(json.dumps(config))
+            _file.write(json.dumps(content))
 
     @classmethod
     async def new_project(cls, db, schema_table, schema_row, name):
