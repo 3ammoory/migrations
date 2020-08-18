@@ -185,7 +185,7 @@ class Migrator:
         if cls.public:
             schema = 'public'
         migration_files = []
-        migration_files = cls.check_for_migrations(cls.public)
+        migration_files = cls.check_for_migrations()
         for sql_file in migration_files:
             upgrade = None
             downgrade = None
