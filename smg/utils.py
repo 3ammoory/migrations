@@ -28,3 +28,14 @@ def getenv(key, config_path=None):
     else:
         load_dotenv(config_path)
         return getval(os.environ, key)
+
+
+def is_projectdir():
+    return all(x in os.listdir() for x in ['config.json', 'sql', 'versions'])
+
+
+def check_dir():
+    if not is_projectdir():
+        typer.secho(
+            f'Error: folder {os.path.basename(os.getcwd())} is not a project directory.', fg='red')
+        raise typer.Abort()

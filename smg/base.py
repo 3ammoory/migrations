@@ -8,12 +8,11 @@ import typer
 from asyncpg.exceptions import DuplicateTableError
 import typer
 
-
-migrations_dir = os.path.join(os.getcwd(), 'migrations')
-public_versions = os.path.join(migrations_dir, 'versions', 'public')
-tenant_versions = os.path.join(migrations_dir, 'versions', 'tenants')
-sql_public_dir = os.path.join(migrations_dir, 'sql', 'public')
-sql_tenant_dir = os.path.join(migrations_dir, 'sql', 'tenant')
+project_dir = os.getcwd()
+public_versions = os.path.join(project_dir, 'versions', 'public')
+tenant_versions = os.path.join(project_dir, 'versions', 'tenants')
+sql_public_dir = os.path.join(project_dir, 'sql', 'public')
+sql_tenant_dir = os.path.join(project_dir, 'sql', 'tenant')
 
 
 def new_migration(mig_data, sql_file, schema='tenant'):
@@ -28,7 +27,7 @@ def new_migration(mig_data, sql_file, schema='tenant'):
 
     new_mig_id = uuid.uuid4()
     new_mig_name = f'{new_mig_id}.json'
-    with open(os.path.join(migrations_dir, 'config.json'), 'rb') as mig_config_file:
+    with open(os.path.join(project_dir, 'config.json'), 'rb') as mig_config_file:
         mig_config = json.loads(mig_config_file.read())
         mig_names = [mig['name'] for mig in mig_config['migrations'][schema]]
         if new_mig_name in mig_names:
@@ -36,33 +35,33 @@ def new_migration(mig_data, sql_file, schema='tenant'):
                 F' New migration "{new_mig_name}" already exists. Select another name')
     with open(os.path.join(versions_dir, new_mig_name), 'wb') as new_mig:
         new_mig.write(mig_data)
-        with open(os.path.join(migrations_dir, 'config.json'), 'rb+') as mig_config_file:
+        with open(os.path.join(project_dir, 'config.json'), 'rb+') as mig_config_file:
             mig_config = json.loads(mig_config_file.read())
             mig_config['migrations'][schema].append(
                 {'name': new_mig_name, 'sql': sql_file})
-            with open(os.path.join(migrations_dir, 'config.json.backup')) as backup_file:
+            with open(os.path.join(project_dir, 'config.json.backup')) as backup_file:
                 backup_file.write(json.dumps(mig_config))
             mig_config_file.write(json.dumps(mig_config))
     return new_mig_id
 
 
-async def new_project(db, schema_table, schema_row):
+async def new_project(db, schema_table, schema_row, name):
     try:
-        os.mkdir('migrations')
+        os.mkdir(name)
     except:
-        print('Directory "migrations" already exists. Will proceed through')
+        typer.secho(f'Directory "{name}" already exists. Will proceed through')
 
     try:
-        os.mkdir(os.path.join(os.getcwd(), 'migrations', 'versions'))
-        os.mkdir(os.path.join(os.getcwd(), 'migrations', 'versions', 'public'))
-        os.mkdir(os.path.join(os.getcwd(), 'migrations', 'versions', 'tenant'))
+        os.mkdir(os.path.join(os.getcwd(), name, 'versions'))
+        os.mkdir(os.path.join(os.getcwd(), name, 'versions', 'public'))
+        os.mkdir(os.path.join(os.getcwd(), name, 'versions', 'tenant'))
     except:
-        print('Directory "versions" already exists. Will proceed through')
+        typer.secho('Directory "versions" already exists. Will proceed through')
 
     try:
-        os.mkdir(os.path.join(os.getcwd(), 'migrations', 'sql'))
-        os.mkdir(os.path.join(os.getcwd(), 'migrations', 'sql', 'public'))
-        os.mkdir(os.path.join(os.getcwd(), 'migrations', 'sql', 'tenant'))
+        os.mkdir(os.path.join(os.getcwd(), name, 'sql'))
+        os.mkdir(os.path.join(os.getcwd(), name, 'sql', 'public'))
+        os.mkdir(os.path.join(os.getcwd(), name, 'sql', 'tenant'))
     except:
         print('Directory "sql" already exists. Will proceed through')
 
@@ -115,7 +114,7 @@ async def new_project(db, schema_table, schema_row):
             ADD COLUMN {schema_row} VARCHAR(32) UNIQUE
             ''')
 
-    with open(os.path.join(os.getcwd(), 'migrations', 'config.json'), 'w') as mig_config_file:
+    with open(os.path.join(os.getcwd(), name, 'config.json'), 'w') as mig_config_file:
         mig_config = {'dsn': db, 'schemaTable': schema_table,
                       'schemaRow': schema_row, 'migrations': {'public': [], 'tenant': []}, 'current_public': None, 'current_tenant': None}
         mig_config_file.write(json.dumps(mig_config))
@@ -133,10 +132,10 @@ def check_for_migrations(public):
         schema = 'tenant'
         sql_files = [os.path.join(sql_tenant_dir, file) for file in os.listdir(
             sql_tenant_dir) if file.endswith('.sql')]
-    with open(os.path.join(migrations_dir, 'config.json'), 'rb') as mig_config_file:
+    with open(os.path.join(project_dir, 'config.json'), 'rb') as mig_config_file:
         mig_config = json.loads(mig_config_file.read())
         existing_migration_sql = [os.path.join(
-            migrations_dir, 'sql', schema, migration['sql']) for migration in mig_config['migrations'][schema]]
+            project_dir, 'sql', schema, migration['sql']) for migration in mig_config['migrations'][schema]]
     files_to_migrate_unprioritized = [
         file for file in sql_files if file not in existing_migration_sql]
     files_to_migrate_prioritized = []
@@ -200,8 +199,8 @@ def make_migrations(public=False):
         new_migration(migration_data, os.path.basename(sql_file))
 
 
-async def upgrade(public, to: int = None):
-    with open(os.path.join(migrations_dir, 'config.json')) as config_file:
+async def upgrade(public, to: str = None):
+    with open(os.path.join(project_dir, 'config.json')) as config_file:
         to = to
         schema = None
         current_mig = None
