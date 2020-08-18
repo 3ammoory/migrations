@@ -22,7 +22,7 @@ def callback(public: bool = False):
 @ app.command()
 @ coro
 async def init(name: str, dsn: str = getenv('DB_URL'), schemaTable: str = getenv('SCHEMA_TABLE'), schemaRow: str = getenv('SCHEMA_ROW')):
-    await new_project(dsn, schemaTable, schemaRow, name)
+    await mgr.new_project(dsn, schemaTable, schemaRow, name)
 
 
 @app.command()
