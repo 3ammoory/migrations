@@ -19,7 +19,7 @@ def set_config_path():
 
 @ app.command()
 @ coro
-async def init(dsn: str = getenv('DB_URL'), schemaTable: str = getenv('SCHEMA_TABLE'), schemaRow: str = getenv('SCHEMA_ROW'), name: str):
+async def init(name: str, dsn: str = getenv('DB_URL'), schemaTable: str = getenv('SCHEMA_TABLE'), schemaRow: str = getenv('SCHEMA_ROW')):
     await new_project(dsn, schemaTable, schemaRow, name)
 
 
