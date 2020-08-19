@@ -167,7 +167,7 @@ class Migrator:
             file for file in sql_files if file not in existing_migration_sql]
         files_to_migrate_prioritized = []
         if not files_to_migrate_unprioritized:
-            raise NoMigrationsError
+            raise NoMigrationsError()
 
         for file in files_to_migrate_unprioritized:
             with open(file) as sql_file:
