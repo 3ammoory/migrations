@@ -32,6 +32,8 @@ def makemigrations():
         mgr.make_migrations()
     except NoMigrationsError:
         typer.secho('WARNING: 0 new migrations were found', fg='yellow')
+        raise typer.Abort()
     except UnidentifiedSQLError as e:
         typer.secho(
             f'''Error: File {e.args[1]} contains sql that does not belong to upgrade or downgrade:\n{e.args[0]}''', fg='red', bg='white')
+        raise typer.Abort()
