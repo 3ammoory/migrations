@@ -1,10 +1,14 @@
-class ExistingMigrationError:
+class ExistingMigrationError(Exception):
     pass
 
 
-class EmptyContentError:
+class EmptyContentError(Exception):
     pass
 
 
-class UnidentifiedSQLError:
+class UnidentifiedSQLError(Exception):
+    pass
+
+
+class NoMigrationsError(Exception):
     pass

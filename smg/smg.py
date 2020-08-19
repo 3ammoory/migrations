@@ -1,8 +1,8 @@
 import os
 import typer
 from dotenv import load_dotenv
-from .base import new_project, make_migrations
 from .base2 import Migrator as mgr
+from .exceptions import UnidentifiedSQLError, NoMigrationsError
 from .utils import coro, getenv, check_dir
 from typing import List
 
@@ -28,4 +28,10 @@ async def init(name: str, dsn: str = getenv('DB_URL'), schemaTable: str = getenv
 @app.command()
 def makemigrations():
     check_dir()
-    mgr.make_migrations()
+    try:
+        mgr.make_migrations()
+    except NoMigrationsError:
+        typer.secho('WARNING: 0 new migrations were found', fg='yellow')
+    except UnidentifiedSQLError as e:
+        typer.secho(
+            f'''Error: File {e.args[1]} contains sql that does not belong to upgrade or downgrade:\n{e.args[0]}''', fg='red', bg='white')

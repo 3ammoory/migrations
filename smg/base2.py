@@ -5,7 +5,8 @@ from asyncpg import DuplicateTableError
 from .utils import check_dir, is_projectdir
 import json
 from pathlib import Path
-from .exceptions import ExistingMigrationError, EmptyContentError, UnidentifiedSQLError
+import sqlparse
+from .exceptions import ExistingMigrationError, EmptyContentError, UnidentifiedSQLError, NoMigrationsError
 
 ROOT = os.getcwd()
 PUBLIC_DIR = Path(ROOT) / 'public'
@@ -164,6 +165,9 @@ class Migrator:
         files_to_migrate_unprioritized = [
             file for file in sql_files if file not in existing_migration_sql]
         files_to_migrate_prioritized = []
+        if not files_to_migrate_unprioritized:
+            raise NoMigrationsError
+
         for file in files_to_migrate_unprioritized:
             with open(file) as sql_file:
                 contents = sql_file.read()
@@ -210,7 +214,8 @@ class Migrator:
                         last_comment = downgrade
                     else:
                         if not last_comment:
-                            raise UnidentifiedSQLError()
+                            raise UnidentifiedSQLError(sqlparse.format(
+                                str(stmt), reindent=True), sql_file)
                         elif last_comment == upgrade:
                             upgrade = ''.join([upgrade, stmt])
                             last_comment = upgrade
