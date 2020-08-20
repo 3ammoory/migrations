@@ -9,13 +9,13 @@ from pathlib import Path
 import sqlparse
 from .exceptions import ExistingMigrationError, EmptyContentError, UnidentifiedSQLError, NoMigrationsError
 
-ROOT = os.getcwd()
-PUBLIC_DIR = Path(ROOT) / 'public'
-TENANT_DIR = Path(ROOT) / 'tenant'
-PUBLIC_SQL = Path(PUBLIC_DIR) / 'sql'
-TENANT_SQL = Path(TENANT_DIR) / 'sql'
-PUBLIC_MIGRATIONS = Path(PUBLIC_DIR) / 'migrations'
-TENANT_MIGRATIONS = Path(TENANT_DIR) / 'migrations'
+ROOT = Path(os.getcwd())
+PUBLIC_DIR = ROOT / 'public'
+TENANT_DIR = ROOT / 'tenant'
+PUBLIC_SQL = PUBLIC_DIR / 'sql'
+TENANT_SQL = TENANT_DIR / 'sql'
+PUBLIC_MIGRATIONS = PUBLIC_DIR / 'migrations'
+TENANT_MIGRATIONS = TENANT_DIR / 'migrations'
 
 
 class Migrator:
@@ -59,17 +59,17 @@ class Migrator:
                 f'Directory "{name}" already exists. Will proceed through')
 
         try:
-            os.mkdir(Path(ROOT) / name / 'public')
-            os.mkdir(Path(ROOT) / name / 'public' / 'migrations')
-            os.mkdir(Path(ROOT) / name / 'public' / 'sql')
+            os.mkdir(ROOT / name / 'public')
+            os.mkdir(ROOT / name / 'public' / 'migrations')
+            os.mkdir(ROOT / name / 'public' / 'sql')
         except:
             typer.secho(
                 'Directory "public" already exists. Will proceed through')
 
         try:
-            os.mkdir(Path(ROOT) / name / 'tenant')
-            os.mkdir(Path(ROOT) / name / 'tenant' / 'migrations')
-            os.mkdir(Path(ROOT) / name / 'tenant' / 'sql')
+            os.mkdir(ROOT / name / 'tenant')
+            os.mkdir(ROOT / name / 'tenant' / 'migrations')
+            os.mkdir(ROOT / name / 'tenant' / 'sql')
         except:
             typer.secho(
                 'Directory "tenants" already exists. Will proceed through')
@@ -140,7 +140,7 @@ class Migrator:
         mig_names = [mig['name'] for mig in mig_config['migrations'][schema]]
         if new_mig_name in mig_names:
             raise ExistingMigrationError()
-        with open(Path(migrations_dir) / new_mig_name, 'w') as new_mig:
+        with open(migrations_dir / new_mig_name, 'w') as new_mig:
             new_mig.write(json.dumps(mig_data))
             cls.write_config(file='config.json.backup')
             cls.config['migrations'][schema].append(
@@ -152,16 +152,16 @@ class Migrator:
     def check_for_migrations(cls):
         schema = 'tenant'
         sql_dir = TENANT_SQL
-        sql_files = [Path(
-            TENANT_SQL) / file for file in os.listdir(TENANT_SQL) if file.endswith('.sql')]
+        sql_files = [
+            TENANT_SQL / file for file in os.listdir(TENANT_SQL) if file.endswith('.sql')]
         existing_migration_sql = []
         if cls.public:
             schema = 'public'
             sql_dir = PUBLIC_SQL
-            sql_files = [Path(
-                PUBLIC_SQL) / file for file in os.listdir(PUBLIC_SQL) if file.endswith('.sql')]
+            sql_files = [
+                PUBLIC_SQL / file for file in os.listdir(PUBLIC_SQL) if file.endswith('.sql')]
         mig_config = cls.read_file()
-        existing_migration_sql = [Path(sql_dir) / migration['sql']
+        existing_migration_sql = [sql_dir / migration['sql']
                                   for migration in mig_config['migrations'][schema]]
         files_to_migrate_unprioritized = [
             file for file in sql_files if file not in existing_migration_sql]
