@@ -180,8 +180,8 @@ class Migrator:
                     files_to_migrate_prioritized.append((file, priority_val))
                 else:
                     files_to_migrate_prioritized.append((file, 1))
-        files_to_migrate_sorted = files_to_migrate_prioritized.sort(
-            key=lambda x: x[1])
+        files_to_migrate_sorted = sorted(
+            files_to_migrate_prioritized, key=lambda x: x[1])
         print(files_to_migrate_sorted)
         files_to_migrate_parsed = [value[0]
                                    for value in files_to_migrate_sorted]
