@@ -179,7 +179,7 @@ class Migrator:
                     priority_val = int(re.findall('\d+', priority_comment)[0])
                     files_to_migrate_prioritized.append((file, priority_val))
                 else:
-                    files_to_migrate_prioritized.append((file, 0))
+                    files_to_migrate_prioritized.append((file, 1))
         files_to_migrate_sorted = files_to_migrate_prioritized.sort(
             key=lambda x: x[1])
         print(files_to_migrate_sorted)
