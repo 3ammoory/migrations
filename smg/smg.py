@@ -17,11 +17,12 @@ def callback(public: bool = False):
     schemas
     '''
     mgr.public = public
+    load_dotenv()
 
 
 @ app.command()
 @ coro
-async def init(name: str, dsn: str = getenv('DB_URL'), schemaTable: str = getenv('SCHEMA_TABLE'), schemaRow: str = getenv('SCHEMA_ROW')):
+async def init(name: str, dsn: str = typer.Option(None, '--dsn', '-d', envvar='DB_URL', show_default=False), schemaTable: str = typer.Option(None, '--table', '-t', envvar='SCHEMA_TABLE'), schemaRow: str = typer.Option(None, '--row', '-r', envvar='SCHEMA_ROW')):
     await mgr.new_project(dsn, schemaTable, schemaRow, name)
 
 
