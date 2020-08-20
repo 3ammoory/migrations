@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from .base2 import Migrator as mgr
 from .exceptions import UnidentifiedSQLError, NoMigrationsError
 from .utils import coro, getenv, check_dir
+from asyncpg.exceptions import InvalidPasswordError
 from typing import List
 
 app = typer.Typer()
@@ -22,8 +23,11 @@ def callback(public: bool = False):
 
 @ app.command()
 @ coro
-async def init(name: str, dsn: str = typer.Option(None, '--dsn', '-d', envvar='DB_URL', show_default=False), schemaTable: str = typer.Option(None, '--table', '-t', envvar='SCHEMA_TABLE'), schemaRow: str = typer.Option(None, '--row', '-r', envvar='SCHEMA_ROW')):
-    await mgr.new_project(dsn, schemaTable, schemaRow, name)
+async def init(name: str, dsn: str = typer.Option(..., '--dsn', '-d', envvar='DB_URL', show_default=False), schemaTable: str = typer.Option(..., '--table', '-t', envvar='SCHEMA_TABLE'), schemaRow: str = typer.Option(..., '--row', '-r', envvar='SCHEMA_ROW')):
+    try:
+        await mgr.new_project(dsn, schemaTable, schemaRow, name)
+    except InvalidPasswordError as e:
+        typer.secho('Error: Incorrect database password', color='red')
 
 
 @app.command()
