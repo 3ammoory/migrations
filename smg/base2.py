@@ -143,7 +143,7 @@ class Migrator:
             raise ExistingMigrationError()
         with open(migrations_dir / new_mig_name, 'w') as new_mig:
             new_mig.write(json.dumps(mig_data))
-            cls.write_config(file='config.json.backup')
+            cls.write_file(file='config.json.backup')
             cls.config['migrations'][schema].append(
                 {'name': new_mig_name, 'sql': sql_file})
             cls.write_config()
