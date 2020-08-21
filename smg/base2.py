@@ -44,7 +44,7 @@ class Migrator:
         if not content:
             raise EmptyContentError
         with open(file, 'w') as _file:
-            _file.write(json.dumps(content))
+            _file.write(json.dumps(content, indent=4))
 
     @classmethod
     async def new_project(cls, db, schema_table, schema_row, name):
@@ -142,7 +142,7 @@ class Migrator:
         if new_mig_name in mig_names:
             raise ExistingMigrationError()
         with open(migrations_dir / new_mig_name, 'w') as new_mig:
-            new_mig.write(json.dumps(mig_data))
+            new_mig.write(json.dumps(mig_data, indent=4))
             cls.write_file(file='config.json.backup')
             cls.config['migrations'][schema].append(
                 {'name': new_mig_name, 'sql': sql_file})
