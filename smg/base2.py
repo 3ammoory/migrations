@@ -227,5 +227,5 @@ class Migrator:
                             raise ValueError(
                                 'variable "last_comment" does not match upgrade or downgrade. Please fix this bug')
             migration_data = {'upgrade': str(sqlparse.format(upgrade, reindent=True, strip_comments=True)), 'downgrade': str(
-                sqlparse.format(downgrade, reindent=True, strip_comments=True))}
-            new_migration(migration_data, os.path.basename(sql_file))
+                sqlparse.format(downgrade, strip_comments=True))}
+            cls.new_migration(migration_data, os.path.basename(sql_file))
