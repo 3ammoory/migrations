@@ -47,7 +47,7 @@ def check_locals(scope: dict):
     as long as no other variable has been declared inside the function
     yet
     '''
-    null_args = [key for key, val in scope.items() if not val]:
+    null_args = [key for key, val in scope.items() if not val]
     if null_args:
         [typer.secho(
             f'Error: Parameter {key} has not been set', fg='red') for key in null_args]
