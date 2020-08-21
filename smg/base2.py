@@ -146,7 +146,7 @@ class Migrator:
             cls.write_file(file='config.json.backup')
             cls.config['migrations'][schema].append(
                 {'name': new_mig_name, 'sql': sql_file})
-            cls.write_config()
+            cls.write_file(file='config.json')
         return new_mig_id
 
     @classmethod
