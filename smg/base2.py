@@ -137,7 +137,7 @@ class Migrator:
 
         new_mig_id = uuid.uuid4()
         new_mig_name = f'{new_mig_id}.json'
-        mig_config = cls.read_config()
+        mig_config = cls.read_file()
         mig_names = [mig['name'] for mig in mig_config['migrations'][schema]]
         if new_mig_name in mig_names:
             raise ExistingMigrationError()
