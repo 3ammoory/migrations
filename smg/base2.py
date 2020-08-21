@@ -1,5 +1,6 @@
 import os
 import re
+import uuid
 import typer
 import asyncpg
 from asyncpg import DuplicateTableError
