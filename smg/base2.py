@@ -221,7 +221,7 @@ class Migrator:
                             upgrade = ''.join([upgrade, str(stmt)])
                             last_comment = upgrade
                         elif last_comment == downgrade:
-                            downgrade = ''.join([downgrade, stmt])
+                            downgrade = ''.join([downgrade, str(stmt)])
                             last_comment = downgrade
                         else:
                             raise ValueError(
