@@ -218,7 +218,7 @@ class Migrator:
                             raise UnidentifiedSQLError(
                                 sqlparse.format(str(stmt)), sql_file)
                         elif last_comment == upgrade:
-                            upgrade = ''.join([upgrade, stmt])
+                            upgrade = ''.join([upgrade, str(stmt)])
                             last_comment = upgrade
                         elif last_comment == downgrade:
                             downgrade = ''.join([downgrade, stmt])
