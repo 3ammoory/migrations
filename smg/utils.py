@@ -39,3 +39,16 @@ def check_dir():
         typer.secho(
             f'Error: folder {os.path.basename(os.getcwd())} is not a project directory.', fg='red')
         raise typer.Abort()
+
+
+def check_locals(scope: dict):
+    '''
+    Can be used to check the args of a function
+    as long as no other variable has been declared inside the function
+    yet
+    '''
+    null_args = [key for key, val in scope.items() if not val]:
+    if null_args:
+        [typer.secho(
+            f'Error: Parameter {key} has not been set', fg='red') for key in null_args]
+        raise typer.Abort()
