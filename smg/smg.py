@@ -11,7 +11,7 @@ app = typer.Typer()
 
 
 @app.callback()
-def callback(public: bool = False):
+def callback(public: bool = typer.Option(False, '--public', '-p')):
     '''
     A tool for handling migrations in
     PostgreSQL databases which contain multiple
