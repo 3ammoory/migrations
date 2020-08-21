@@ -131,7 +131,7 @@ class Migrator:
         migrations_dir = TENANT_MIGRATIONS
         schema = 'tenant'
         if cls.public:
-            migrations_dir = public_versions
+            migrations_dir = PUBLIC_MIGRATIONS
             schema = 'public'
 
         new_mig_id = uuid.uuid4()
