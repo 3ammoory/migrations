@@ -23,7 +23,8 @@ def callback(public: bool = False):
 
 @ app.command()
 @ coro
-async def init(name: str, dsn: str = typer.Option(..., '--dsn', '-d', envvar='DB_URL', show_default=False), schemaTable: str = typer.Option(..., '--table', '-t', envvar='SCHEMA_TABLE'), schemaRow: str = typer.Option(..., '--row', '-r', envvar='SCHEMA_ROW')):
+async def init(name: str, dsn: str = typer.Option(None, '--dsn', '-d', envvar='DB_URL', show_default=False), schemaTable: str = typer.Option(None, '--table', '-t', envvar='SCHEMA_TABLE'), schemaRow: str = typer.Option(None, '--row', '-r', envvar='SCHEMA_ROW')):
+    print(locals())
     try:
         await mgr.new_project(dsn, schemaTable, schemaRow, name)
     except InvalidPasswordError as e:
